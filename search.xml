@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search> 
+  
+  
+    
+    <entry>
+      <title>vscode远程离线服务器使用jupyter</title>
+      <link href="/2025/02/19/vscode%E8%BF%9C%E7%A8%8B%E7%A6%BB%E7%BA%BF%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%BD%BF%E7%94%A8jupyter/"/>
+      <url>/2025/02/19/vscode%E8%BF%9C%E7%A8%8B%E7%A6%BB%E7%BA%BF%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%BD%BF%E7%94%A8jupyter/</url>
+      
+        <content type="html"><![CDATA[<h2 id="前提"><a href="#前提" class="headerlink" title="前提"></a>前提</h2><p>已经进行了<code>vscode远程离线服务器</code>以及<code>wrf-python+jupyter noteobook环境配置</code>的操作，可以实现浏览器操作，此贴目的为了方便代码修改和运行。</p><h2 id="安装jupyter扩展（远程服务器上）"><a href="#安装jupyter扩展（远程服务器上）" class="headerlink" title="安装jupyter扩展（远程服务器上）"></a>安装jupyter扩展（远程服务器上）</h2><p>安装成功后可以在Extensions中看到远程主机的扩展，搜索<code>jupyter</code>，在远程主机安装jupyter：<br><img src="/2025/02/19/vscode%E8%BF%9C%E7%A8%8B%E7%A6%BB%E7%BA%BF%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%BD%BF%E7%94%A8jupyter/001.jpg" alt="图片1"><br>安装会比较慢，如果安装失败可以挂梯子或者尝试.vsix的方式</p><h2 id="配置jupyter-server"><a href="#配置jupyter-server" class="headerlink" title="配置jupyter server"></a>配置jupyter server</h2><p>在服务器<code>.jupyter/jupyter_notebook_config.py</code>修改</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">c.ServerApp.root_dir=<span class="string">&#x27; &#x27;</span> <span class="comment"># jupyter_notebook_config.py所在路径</span></span><br><span class="line">c.ServerApp.ip=<span class="string">&#x27;*&#x27;</span> <span class="comment">#notebook监听所有ip地址</span></span><br><span class="line"> </span><br><span class="line"><span class="comment"># 重要配置！！！</span></span><br><span class="line">c.ServerApp.allow_remote_access = <span class="literal">True</span> <span class="comment">#允许远程访问服务</span></span><br><span class="line">c.ServerApp.allow_root = <span class="literal">True</span>          <span class="comment">#允许在root用户下运行（之前没开这个配置排查了很久）</span></span><br><span class="line">c.NotebookApp.allow_origin = <span class="string">&#x27;*&#x27;</span>       <span class="comment">#允许任意源访问</span></span><br><span class="line">c.ServerApp.trust_xheaders = <span class="literal">True</span></span><br><span class="line">c.ServerApp.disable_check_xsrf = <span class="literal">True</span></span><br></pre></td></tr></table></figure><h2 id="连接jupyter"><a href="#连接jupyter" class="headerlink" title="连接jupyter"></a>连接jupyter</h2><p><img src="/2025/02/19/vscode%E8%BF%9C%E7%A8%8B%E7%A6%BB%E7%BA%BF%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%BD%BF%E7%94%A8jupyter/002.jpg" alt="图片2"><br><img src="/2025/02/19/vscode%E8%BF%9C%E7%A8%8B%E7%A6%BB%E7%BA%BF%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%BD%BF%E7%94%A8jupyter/003.jpg" alt="图片3"><br>后续需要输入jupyter的地址，在浏览中跳转的是<br><code>http://localhost:8888/</code>,输入自己的密码即可。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 环境配置 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 服务器 </tag>
+            
+            <tag> python </tag>
+            
+            <tag> jupyter </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>wrf-python+jupyter noteobook环境配置</title>
+      <link href="/2025/01/13/wrf-python-jupyter-noteobook%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/"/>
+      <url>/2025/01/13/wrf-python-jupyter-noteobook%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/</url>
+      
+        <content type="html"><![CDATA[<h2 id="前提"><a href="#前提" class="headerlink" title="前提"></a>前提</h2><p>wrf-python用于处理WRF模式的数据，jupyter notebook用于交互式编程，大服务器可以用jupyter运行wrf-python，主要调用ll_to_xy函数，用于将经纬度坐标转换为网格坐标。</p><h2 id="1-创建新的python环境"><a href="#1-创建新的python环境" class="headerlink" title="1. 创建新的python环境"></a>1. 创建新的python环境</h2><p>这里指定一下<code>python=3.7</code>比较稳定，之前用3.10的版本和ikernal有冲突，无法启动jupyter notebook。</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">conda create -n wrfpython_env python=3.7</span><br><span class="line">conda activate wrfpython_env</span><br></pre></td></tr></table></figure><h2 id="2-安装jupyter-notebook并使设置密码"><a href="#2-安装jupyter-notebook并使设置密码" class="headerlink" title="2. 安装jupyter notebook并使设置密码"></a>2. 安装jupyter notebook并使设置密码</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">conda install jupyter</span><br><span class="line">jupyter notebook password</span><br></pre></td></tr></table></figure><h2 id="3-安装wrf-python"><a href="#3-安装wrf-python" class="headerlink" title="3. 安装wrf-python"></a>3. 安装wrf-python</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda install -c conda-forge wrf-python</span><br></pre></td></tr></table></figure><h2 id="4-安装ipykernel并设置名称"><a href="#4-安装ipykernel并设置名称" class="headerlink" title="4. 安装ipykernel并设置名称"></a>4. 安装ipykernel并设置名称</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">conda install -c conda-forge ipykernel</span><br><span class="line">python -m ipykernel install --user --name wrfpython_env --display-name &quot;wrfpython_env&quot;</span><br></pre></td></tr></table></figure><h2 id="5-启动jupyter-notebook"><a href="#5-启动jupyter-notebook" class="headerlink" title="5. 启动jupyter notebook"></a>5. 启动jupyter notebook</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jupyter notebook</span><br></pre></td></tr></table></figure><p>完结撒花！！</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 环境配置 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 服务器 </tag>
+            
+            <tag> python </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>SSHFS将远程服务器目录挂载到Windows本地</title>
+      <link href="/2025/01/10/SSHFS%E5%B0%86%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9B%AE%E5%BD%95%E6%8C%82%E8%BD%BD%E5%88%B0Windows%E6%9C%AC%E5%9C%B0/"/>
+      <url>/2025/01/10/SSHFS%E5%B0%86%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9B%AE%E5%BD%95%E6%8C%82%E8%BD%BD%E5%88%B0Windows%E6%9C%AC%E5%9C%B0/</url>
+      
+        <content type="html"><![CDATA[<h2 id="前提"><a href="#前提" class="headerlink" title="前提"></a>前提</h2><p>本文介绍了如何通过SSHFS-Win工具将远程Linux服务器的目录挂载到Windows系统，实现如同本地磁盘一样的操作，简化文件传输步骤,也可实现本地python环境处理服务器数据，但读取速度较慢。</p><h2 id="1-软件下载安装"><a href="#1-软件下载安装" class="headerlink" title="1. 软件下载安装"></a>1. 软件下载安装</h2><p>直接前往 github 对应项目的 release 中下载最新版本即可，需注意 sshfs-win 对 winfsp 的最低版本依赖（下载非测试的最新版本一），另外有GUI（用户图形操作界面）可供下载，建议下载。<strong>并按下面顺序安装</strong><br><a href="https://github.com/billziss-gh/winfsp/releases">winfsp</a><br><a href="https://github.com/billziss-gh/sshfs-win/releases">sshfs-win</a><br><a href="https://github.com/evsar3/sshfs-win-manager/releases">SSHFS-Win Manager</a> (GUI，可选)<br>直接安装在c盘比较好。</p><h2 id="2-使用GUI挂载"><a href="#2-使用GUI挂载" class="headerlink" title="2. 使用GUI挂载"></a>2. 使用GUI挂载</h2><p>安装好前面三个软件后，打开SSHFS-Win Manager<br>编辑新的挂载点，填写服务器信息，需要额外advance中允许其他本地用户访问挂载的文件系统，不然可能会出现下面的问题。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">read: Connection reset by peer</span><br></pre></td></tr></table></figure><p>同时，我选择了密码登录，如果曾经设置过密钥的（如vscode远程服务器免密登录操作），建议将本地以及服务器下<code>/.ssh/</code>的密钥删除，或许有其他的密钥连接方式，我还未成功，有明白的小伙伴可以留言。<br><img src="/2025/01/10/SSHFS%E5%B0%86%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9B%AE%E5%BD%95%E6%8C%82%E8%BD%BD%E5%88%B0Windows%E6%9C%AC%E5%9C%B0/001.jpg" alt="图片1"><br><img src="/2025/01/10/SSHFS%E5%B0%86%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9B%AE%E5%BD%95%E6%8C%82%E8%BD%BD%E5%88%B0Windows%E6%9C%AC%E5%9C%B0/002.jpg" alt="图片2"><br><img src="/2025/01/10/SSHFS%E5%B0%86%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9B%AE%E5%BD%95%E6%8C%82%E8%BD%BD%E5%88%B0Windows%E6%9C%AC%E5%9C%B0/003.jpg" alt="图片3"><br><img src="/2025/01/10/SSHFS%E5%B0%86%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9B%AE%E5%BD%95%E6%8C%82%E8%BD%BD%E5%88%B0Windows%E6%9C%AC%E5%9C%B0/004.jpg" alt="图片4"><br>下图就连接成功啦！<br><img src="/2025/01/10/SSHFS%E5%B0%86%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9B%AE%E5%BD%95%E6%8C%82%E8%BD%BD%E5%88%B0Windows%E6%9C%AC%E5%9C%B0/005.jpg" alt="图片5"></p><h2 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h2><p>hexo生成博客的时候还是需要github的密钥，因此下一步需要研究密钥的连接方式。</p><h2 id="参考网站"><a href="#参考网站" class="headerlink" title="参考网站"></a>参考网站</h2><ul><li><a href="https://blog.csdn.net/weixin_43431218/article/details/131940913">部署让你的电脑多出一个磁盘来用！使用SSHFS将远程服务器目录挂载到Windows本地，挂载并共享服务器资源</a></li><li><a href="https://blog.csdn.net/qq_40734883/article/details/131392622">https://blog.csdn.net/qq_40734883&#x2F;article&#x2F;details&#x2F;131392622</a></li><li><a href="https://cn.linux-console.net/?p=22191">在 Linux 上安装 sshfs 并使用 sshfs</a></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 工具 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> ssh </tag>
+            
+            <tag> 服务器 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>用本地机做跳板使服务器连接外网【Win】</title>
+      <link href="/2025/01/09/%E5%A4%A7%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%BD%BF%E7%94%A8%E5%8F%B0%E5%BC%8F%E6%9C%BA%E4%B8%BA%E8%B7%B3%E6%9D%BF%E6%9C%BA%E8%BF%9B%E8%A1%8C%E8%81%94%E7%BD%91/"/>
+      <url>/2025/01/09/%E5%A4%A7%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%BD%BF%E7%94%A8%E5%8F%B0%E5%BC%8F%E6%9C%BA%E4%B8%BA%E8%B7%B3%E6%9D%BF%E6%9C%BA%E8%BF%9B%E8%A1%8C%E8%81%94%E7%BD%91/</url>
+      
+        <content type="html"><![CDATA[<h2 id="前提"><a href="#前提" class="headerlink" title="前提"></a>前提</h2><p>本地下文件再传服务器又慢又麻烦，想到大服务器可以用台式机为跳板机，就开始摸索了。感谢师弟帮我debug。</p><h2 id="1-配置本地"><a href="#1-配置本地" class="headerlink" title="1. 配置本地"></a>1. 配置本地</h2><h3 id="1-1-安装squid"><a href="#1-1-安装squid" class="headerlink" title="1.1 安装squid"></a>1.1 安装squid</h3><p><a href="https://squid.diladele.com/">squid网址</a><br>全程无脑安装就可以<br>查看是否打开<br><img src="/2025/01/09/%E5%A4%A7%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%BD%BF%E7%94%A8%E5%8F%B0%E5%BC%8F%E6%9C%BA%E4%B8%BA%E8%B7%B3%E6%9D%BF%E6%9C%BA%E8%BF%9B%E8%A1%8C%E8%81%94%E7%BD%91/007.jpg" alt="图片7"></p><h3 id="1-2-防火墙设置"><a href="#1-2-防火墙设置" class="headerlink" title="1.2 防火墙设置"></a>1.2 防火墙设置</h3><p>在防火墙设置中添加3128端口的入站规则<br><img src="/2025/01/09/%E5%A4%A7%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%BD%BF%E7%94%A8%E5%8F%B0%E5%BC%8F%E6%9C%BA%E4%B8%BA%E8%B7%B3%E6%9D%BF%E6%9C%BA%E8%BF%9B%E8%A1%8C%E8%81%94%E7%BD%91/002.png" alt="图片2"><br><img src="/2025/01/09/%E5%A4%A7%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%BD%BF%E7%94%A8%E5%8F%B0%E5%BC%8F%E6%9C%BA%E4%B8%BA%E8%B7%B3%E6%9D%BF%E6%9C%BA%E8%BF%9B%E8%A1%8C%E8%81%94%E7%BD%91/003.png" alt="图片3"><br><img src="/2025/01/09/%E5%A4%A7%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%BD%BF%E7%94%A8%E5%8F%B0%E5%BC%8F%E6%9C%BA%E4%B8%BA%E8%B7%B3%E6%9D%BF%E6%9C%BA%E8%BF%9B%E8%A1%8C%E8%81%94%E7%BD%91/004.png" alt="图片4"><br><img src="/2025/01/09/%E5%A4%A7%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%BD%BF%E7%94%A8%E5%8F%B0%E5%BC%8F%E6%9C%BA%E4%B8%BA%E8%B7%B3%E6%9D%BF%E6%9C%BA%E8%BF%9B%E8%A1%8C%E8%81%94%E7%BD%91/005.png" alt="图片5"><br><img src="/2025/01/09/%E5%A4%A7%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%BD%BF%E7%94%A8%E5%8F%B0%E5%BC%8F%E6%9C%BA%E4%B8%BA%E8%B7%B3%E6%9D%BF%E6%9C%BA%E8%BF%9B%E8%A1%8C%E8%81%94%E7%BD%91/006.png" alt="图片6"></p><h2 id="2-配置服务器"><a href="#2-配置服务器" class="headerlink" title="2. 配置服务器"></a>2. 配置服务器</h2><h3 id="2-1-环境配置"><a href="#2-1-环境配置" class="headerlink" title="2.1 环境配置"></a>2.1 环境配置</h3><p>在常用的bashrc下添加</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export http_proxy=xx.xxx.xx:3128</span><br><span class="line">export https_proxy=xx.xxx.xx:3128</span><br></pre></td></tr></table></figure><p><strong>Tips:</strong> 这里的端口号是squid的端口号，默认3128，最好不要修改，我修改之后出bug了。xx.xxx.xx是台式机的ip，可以在mobaxterm登录的时候显示<br><img src="/2025/01/09/%E5%A4%A7%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%BD%BF%E7%94%A8%E5%8F%B0%E5%BC%8F%E6%9C%BA%E4%B8%BA%E8%B7%B3%E6%9D%BF%E6%9C%BA%E8%BF%9B%E8%A1%8C%E8%81%94%E7%BD%91/001.jpg" alt="图片1"></p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">source ~/.wrf-cmaq_bashrc</span><br><span class="line">echo $http_proxy</span><br><span class="line">echo $https_proxy</span><br></pre></td></tr></table></figure><h3 id="2-2-wget测试"><a href="#2-2-wget测试" class="headerlink" title="2.2 wget测试"></a>2.2 wget测试</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget http://baidu.com</span><br></pre></td></tr></table></figure><p>成功如下<br><img src="/2025/01/09/%E5%A4%A7%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%BD%BF%E7%94%A8%E5%8F%B0%E5%BC%8F%E6%9C%BA%E4%B8%BA%E8%B7%B3%E6%9D%BF%E6%9C%BA%E8%BF%9B%E8%A1%8C%E8%81%94%E7%BD%91/008.jpg" alt="图片8"></p><h2 id="参考网站"><a href="#参考网站" class="headerlink" title="参考网站"></a>参考网站</h2><p><a href="https://blog.csdn.net/euzmin/article/details/130754468">Mac版操作</a><br><a href="https://www.cnblogs.com/pearl-t/p/16045333.html">Squid安装教程</a><br><a href="https://www.zhangxf.cc/">师弟博客</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 工具 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 服务器 </tag>
+            
+            <tag> vscode </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>vscode远程离线服务器并添加X11</title>
+      <link href="/2024/12/10/vscode%E8%BF%9C%E7%A8%8B%E7%A6%BB%E7%BA%BF%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%B9%B6%E6%B7%BB%E5%8A%A0X11/"/>
+      <url>/2024/12/10/vscode%E8%BF%9C%E7%A8%8B%E7%A6%BB%E7%BA%BF%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%B9%B6%E6%B7%BB%E5%8A%A0X11/</url>
+      
+        <content type="html"><![CDATA[<p>师弟告诉我可以在vscode远程服务器，就开始摸索了。博客也是他先开始整的，我是个学人精。</p><h2 id="1-安装插件"><a href="#1-安装插件" class="headerlink" title="1. 安装插件"></a>1. 安装插件</h2><p>在插件选项卡里搜索<code>Remote-SSH</code>,左栏新增Remote Explore<br><img src="/2024/12/10/vscode%E8%BF%9C%E7%A8%8B%E7%A6%BB%E7%BA%BF%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%B9%B6%E6%B7%BB%E5%8A%A0X11/001.jpg" alt="图片1"></p><h2 id="2-添加服务器config"><a href="#2-添加服务器config" class="headerlink" title="2. 添加服务器config"></a>2. 添加服务器config</h2><p><img src="/2024/12/10/vscode%E8%BF%9C%E7%A8%8B%E7%A6%BB%E7%BA%BF%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%B9%B6%E6%B7%BB%E5%8A%A0X11/002.jpg" alt="图片2"><br>点击添加按钮，输入远程服务器ip，格式如下<br><img src="/2024/12/10/vscode%E8%BF%9C%E7%A8%8B%E7%A6%BB%E7%BA%BF%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%B9%B6%E6%B7%BB%E5%8A%A0X11/003.jpg" alt="图片3"><br>生成本地config文件，之后的X11配置在这个文件里也有添加<br><img src="/2024/12/10/vscode%E8%BF%9C%E7%A8%8B%E7%A6%BB%E7%BA%BF%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%B9%B6%E6%B7%BB%E5%8A%A0X11/004.jpg" alt="图片4"><br>点击此处可以快速查看config文件<br><img src="/2024/12/10/vscode%E8%BF%9C%E7%A8%8B%E7%A6%BB%E7%BA%BF%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%B9%B6%E6%B7%BB%E5%8A%A0X11/006.jpg" alt="图片6"><br><img src="/2024/12/10/vscode%E8%BF%9C%E7%A8%8B%E7%A6%BB%E7%BA%BF%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%B9%B6%E6%B7%BB%E5%8A%A0X11/005.jpg" alt="图片5"></p><h2 id="3-连接服务器"><a href="#3-连接服务器" class="headerlink" title="3. 连接服务器"></a>3. 连接服务器</h2><p>右键选择远程服务器，点击Connect to Host in Current Window:<br><img src="/2024/12/10/vscode%E8%BF%9C%E7%A8%8B%E7%A6%BB%E7%BA%BF%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%B9%B6%E6%B7%BB%E5%8A%A0X11/007.jpg" alt="图片7"><br>没有设置密钥前需要输入服务器密码，登陆后打开自己账户下的文件夹。<br><img src="/2024/12/10/vscode%E8%BF%9C%E7%A8%8B%E7%A6%BB%E7%BA%BF%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%B9%B6%E6%B7%BB%E5%8A%A0X11/008.jpg" alt="图片8"></p><h2 id="4-免密登录"><a href="#4-免密登录" class="headerlink" title="4. 免密登录"></a>4. 免密登录</h2><h3 id="4-1-生成密钥"><a href="#4-1-生成密钥" class="headerlink" title="4.1 生成密钥"></a>4.1 生成密钥</h3><p>生成ssh使用的公钥&#x2F;密钥对，从本地电脑的 PowerShell 或 cmd 提示符运行以下命令</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa</span><br></pre></td></tr></table></figure><h3 id="4-2-编辑config"><a href="#4-2-编辑config" class="headerlink" title="4.2 编辑config"></a>4.2 编辑config</h3><p><img src="/2024/12/10/vscode%E8%BF%9C%E7%A8%8B%E7%A6%BB%E7%BA%BF%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%B9%B6%E6%B7%BB%E5%8A%A0X11/005.jpg" alt="图片5"><br>拷贝实际路径下id_ras.pub文件中的内容</p><h3 id="4-3-将公钥所有内容输入服务器中"><a href="#4-3-将公钥所有内容输入服务器中" class="headerlink" title="4.3 将公钥所有内容输入服务器中"></a>4.3 将公钥所有内容输入服务器中</h3><p>在大服务器上输入</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;id_ras.pub的全部内容&quot; &gt;&gt; ~/.ssh/authorized_keys</span><br></pre></td></tr></table></figure><p>以上免密成功</p><h2 id="5-vscode安装X11"><a href="#5-vscode安装X11" class="headerlink" title="5.vscode安装X11"></a>5.vscode安装X11</h2><h3 id="5-1-本地安装Xming并修改配置"><a href="#5-1-本地安装Xming并修改配置" class="headerlink" title="5.1 本地安装Xming并修改配置"></a>5.1 本地安装Xming并修改配置</h3><p><a href="https://udomain.dl.sourceforge.net/project/xming/Xming/6.9.0.31/Xming-6-9-0-31-setup.exe">Xming下载链接</a></p><ul><li>按一般流程安装就可以，注意XLaunch的<code>Display number=0</code><br><img src="/2024/12/10/vscode%E8%BF%9C%E7%A8%8B%E7%A6%BB%E7%BA%BF%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%B9%B6%E6%B7%BB%E5%8A%A0X11/009.jpg" alt="图片9"></li><li>在Xming的安装目录找到X0.hosts文件，并在localhost下一行添加大服务器IP（X0.hosts中的0就是刚才需要记住的Display number)<br><img src="/2024/12/10/vscode%E8%BF%9C%E7%A8%8B%E7%A6%BB%E7%BA%BF%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%B9%B6%E6%B7%BB%E5%8A%A0X11/010.jpg" alt="图片10"></li></ul><h3 id="5-2-vscode安装插件"><a href="#5-2-vscode安装插件" class="headerlink" title="5.2 vscode安装插件"></a>5.2 vscode安装插件</h3><p>本地安装<code>Remote X11(SSH)</code>，服务器自动安装<code>Remote X11</code>,时间有点久，等等。<br><img src="/2024/12/10/vscode%E8%BF%9C%E7%A8%8B%E7%A6%BB%E7%BA%BF%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%B9%B6%E6%B7%BB%E5%8A%A0X11/011.jpg" alt="图片11"><br><img src="/2024/12/10/vscode%E8%BF%9C%E7%A8%8B%E7%A6%BB%E7%BA%BF%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%B9%B6%E6%B7%BB%E5%8A%A0X11/012.jpg" alt="图片12"></p><h3 id="5-3-vscode修改配置"><a href="#5-3-vscode修改配置" class="headerlink" title="5.3 vscode修改配置"></a>5.3 vscode修改配置</h3><p>同样在config文件中添加</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ForwardX11 yes</span><br><span class="line">ForwardX11Trusted yes</span><br><span class="line">ForwardAgent yes</span><br></pre></td></tr></table></figure><h3 id="5-4-远程服务器环境配置"><a href="#5-4-远程服务器环境配置" class="headerlink" title="5.4 远程服务器环境配置"></a>5.4 远程服务器环境配置</h3><h4 id="5-4-1-找对本地ip"><a href="#5-4-1-找对本地ip" class="headerlink" title="5.4.1 找对本地ip"></a>5.4.1 找对本地ip</h4><p>我的是在<code> ~/.wrf-cmaq_bashrc</code>中添加，难点不在添加代码，而是找到自己本地电脑的真正ip，我的ip应该是局域网IPV4地址<code>10.15.31.xxx</code>不要再用127.0.0.2这样的ip了这是系统默认的，会被师弟黑客攻击（不是）。<br>正确的操作是在powershell中查看</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ipconfig</span><br></pre></td></tr></table></figure><p><img src="/2024/12/10/vscode%E8%BF%9C%E7%A8%8B%E7%A6%BB%E7%BA%BF%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%B9%B6%E6%B7%BB%E5%8A%A0X11/013.jpg" alt="图片13"></p><h4 id="5-4-12-大服务器配置"><a href="#5-4-12-大服务器配置" class="headerlink" title="5.4.12 大服务器配置"></a>5.4.12 大服务器配置</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export DISPLAY=ip:0.0 #used in Vscode,deleted when in Mobaxterm.</span><br></pre></td></tr></table></figure><p>到此安装完毕。需要注意，本地的Xming需要先手动打开在后台，后续vscode操作才会成功调用。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 工具 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 服务器 </tag>
+            
+            <tag> vscode </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+  
+  
+</search>
